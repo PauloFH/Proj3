@@ -49,12 +49,12 @@ request * Pedir(Dvector* vet){
 		addped >> tmp.need;
 		int cont{}, tst{};
 		for (int f{}; f < sz; f++) {
-			if (!(strcmp(vet[f].Prd.name, tmp.name))) {
+			if (!(strcmp(vet[f].pds.name, tmp.name))) {
 				cont = f;
 				tst++;
 			}
 			if (tst > 0) {
-				
+				vet[f].pds.need +=
 
 			}
 			else {
