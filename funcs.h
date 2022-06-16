@@ -15,7 +15,6 @@ struct request{
 	unsigned need;
 };
 struct Dvector {
-	request pds;
 	Products Prd;
 	unsigned sz;
 	unsigned times;

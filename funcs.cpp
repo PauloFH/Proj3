@@ -14,8 +14,10 @@ void inicio(){
 }
 
 request * Pedir(Dvector* vet){
-	char acname[25]{}, newacname[25]{}, cb[50]{}, tx[50]{};
+	char ch{},acname[25]{}, newacname[25]{}, cb[50]{}, tx[50]{};
 	request tmp{};
+	request* pedidos{};
+	unsigned sz{};
 	int i{};
 	ifstream addped;
 	cout << "Pedir\n-------\n";
@@ -31,11 +33,14 @@ request * Pedir(Dvector* vet){
 	addped.open(acname, ios_base::in);
 	if (!addped.is_open()) {
 		cout << "arquivo inexistente";
-	}
-
-	else {
-		unsigned sz{};
-		sz = strlen(tmp.name);
+	}else{
+		while (addped.get(ch)){
+			if (ch == '\n')
+				sz++;
+		}
+		pedidos = new request[sz];
+			unsigned szs{};
+		szs = strlen(tmp.name);
 		addped.getline(cb, 50);
 		addped.getline(tx, 50);
 		addped >> tmp.name;
@@ -45,20 +50,28 @@ request * Pedir(Dvector* vet){
 			if (isupper(tmp.name[f]))
 				tmp.name[f] = towlower(tmp.name[f]);
 		}
-
 		addped >> tmp.need;
-		int cont{}, tst{};
+		int cont{}, tst{}, vazio{};
 		for (int f{}; f < sz; f++) {
-			if (!(strcmp(vet[f].pds.name, tmp.name))) {
+			if (!(strcmp(pedidos[f].name, tmp.name))) {
 				cont = f;
 				tst++;
 			}
 			if (tst > 0) {
-				vet[f].pds.need +=
+				pedidos[f].need += tmp.need;
 
 			}
 			else {
-		
+					int i{};
+					while (vazio == 0) {
+						if (pedidos[i].name == "") {
+							strcpy(pedidos[f].name, tmp.name);
+							vazio++;
+						}
+						else {
+							i++;
+						}
+					}
 			}
 
 		}
