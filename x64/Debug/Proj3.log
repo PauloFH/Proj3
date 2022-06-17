@@ -1,2 +1,7 @@
-﻿  PrincipalPP3.cpp
+﻿  funcs.cpp
+C:\Users\paulo\source\repos\Proj3\funcs.cpp(90,22): warning C4244: '+=': conversão de 'float' para 'int', possível perda de dados
+C:\Users\paulo\source\repos\Proj3\funcs.cpp(102,15): warning C4244: '=': conversão de 'double' para 'int', possível perda de dados
+C:\Users\paulo\source\repos\Proj3\funcs.cpp(132,25): warning C4244: 'inicializando': conversão de 'double' para 'size_t', possível perda de dados
+C:\Users\paulo\source\repos\Proj3\funcs.cpp(151,27): warning C4244: '=': conversão de 'wint_t' para 'char', possível perda de dados
+C:\Users\paulo\source\repos\Proj3\funcs.cpp(154,27): warning C4244: '=': conversão de 'wint_t' para 'char', possível perda de dados
   Proj3.vcxproj -> C:\Users\paulo\source\repos\Proj3\x64\Debug\Proj3.exe

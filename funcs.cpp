@@ -1,5 +1,7 @@
-#include "funcs.h"
 //Paulo Roberto Fernandes Holanda
+#include "funcs.h"
+#pragma warning(disable : 4996)
+
 
 void inicio(){
 	cout << "Sistema de Controle\n";
@@ -13,42 +15,42 @@ void inicio(){
 	cout << "Opção: [_]\b\b";
 }
 
-request * Pedir(Dvector* vet){
+Dvector* Pedir(Dvector* vet) {// Ler o arquivo, cria nfc do pedido com o preço
 	char ch{},acname[25]{}, newacname[25]{}, cb[50]{}, tx[50]{};
 	request tmp{};
 	request* pedidos{};
-	unsigned sz{};
+	int sz{};
 	int i{};
 	ifstream addped;
 	cout << "Pedir\n-------\n";
 	cout << "Arquivo: ";
-	cin >> acname;
+	cin >> acname;// recebe nome do arquivo
 	while(acname[i] != '.') {
 		newacname[i] = acname[i];
 		i++;
 	}
 	newacname[i] = '\0';
-	strcat(newacname,".nfc");
-
-	addped.open(acname, ios_base::in);
-	if (!addped.is_open()) {
+	strcat(newacname,".nfc");//cria o nome em .nfc
+	
+	addped.open(acname, ios_base::in);// abre o arquivo texto para leitura.
+	if (!addped.is_open()) {// caso o arquivo não exista, não abre nada e volta para o inicio
 		cout << "arquivo inexistente";
 	}else{
 		while (addped.get(ch)){
 			if (ch == '\n')
 				sz++;
-		}
-		pedidos = new request[sz];
-			unsigned szs{};
-		szs = strlen(tmp.name);
-		addped.getline(cb, 50);
-		addped.getline(tx, 50);
-		addped >> tmp.name;
-		if (!isupper(tmp.name[0]))
-			tmp.name[0] = towupper(tmp.name[0]);
+		}// conta a quantidade de linhas
+		pedidos = new request[sz];// vetor que carrega os pedidos
+			int szs{};
+			addped.getline(cb, 50);
+			addped.getline(tx, 50);
+		szs = (int)strlen(tmp.name); // tamanho dos pedidos
+		addped >> tmp.name;// recebe nome do produto pedido
+		if (!isupper(tmp.name[0]))// coloca o nome no modelo primeira maiuscula 
+			tmp.name[0] = (char)towupper(tmp.name[0]);
 		for (int f{ 1 }; f < sz; f++) {
 			if (isupper(tmp.name[f]))
-				tmp.name[f] = towlower(tmp.name[f]);
+				tmp.name[f] = (char)towlower(tmp.name[f]);
 		}
 		addped >> tmp.need;
 		int cont{}, tst{}, vazio{};
@@ -58,88 +60,128 @@ request * Pedir(Dvector* vet){
 				tst++;
 			}
 			if (tst > 0) {
-				pedidos[f].need += tmp.need;
+				pedidos[cont].need += tmp.need;
 
 			}
 			else {
-					int i{};
-					while (vazio == 0) {
-						if (pedidos[i].name == "") {
-							strcpy(pedidos[f].name, tmp.name);
-							vazio++;
-						}
-						else {
-							i++;
-						}
-					}
+			strcpy(pedidos[f].name, tmp.name);
+			pedidos[f].need = tmp.need;
 			}
-
 		}
+
 	}
+		int tst = {};
+		int controle{};
+		while (controle!= 0 && tst >=0){
+			for (int i{}; i < sz;) {
+
+			}
+		}
+		int valT{}, ds{};
+		for (int i{}; i < vet->ct; i++) {
+			valT += vet[i].Prd.price;
+		}
+		ofstream nfc;
+		nfc.open(newacname);
+		nfc << cb << endl;
+		nfc << "---------------------------------------------------\n";
+		nfc << "Compra";
+		nfc << right; nfc.width(30); nfc.fill(' ');
+		nfc << "=";
+		nfc << right; nfc.width(6); nfc.fill(' ');
+		nfc << "R$" << valT<<endl;
+		if (valT > 1000) {
+			ds = (valT * 0.1);
+			valT -= ds;
+		}
+
+		nfc << right; nfc.width(30); nfc.fill(' ');
+		nfc << "Desconto";
+		nfc << right; nfc.width(6); nfc.fill(' ');
+		nfc << "=";
+		nfc << right; nfc.width(5); nfc.fill(' ');
+		nfc << "R$" << ds << endl;
+
+		nfc << right; nfc.width(30); nfc.fill(' ');
+		nfc << "Total";
+		nfc << right; nfc.width(6); nfc.fill(' ');
+		nfc << "=";
+		nfc << right; nfc.width(5); nfc.fill(' ');
+		nfc << "R$" << valT << endl;
+	}
+	return vet ;
 }
 
-void Adicionar(Dvector* dvet) {
-	int sz{}, newsz{}, ct{};
 
+Dvector* Adicionar(Dvector* dvet){
 	Products pduct{};
-	sz = dvet->sz;
-	dvet->ct++;
-	if (ct >= sz) {
-		newsz = sz + (pow(2, dvet->times));
+	int sz = dvet->sz, ct = dvet->ct, times = dvet->times;
+	if (sz == ct) {
+		int sz = dvet->sz;
+		int newsz{};
 		Dvector* temp{};
-		temp = new Dvector[newsz];
-		dvet->times++;
+		newsz = sz + (int)(pow(2, times));
+		temp = new Dvector[sz + (pow(2,times++))];
 		for (int i{}; i < sz; i++) {
 			temp[i] = dvet[i];
 		}
 		delete[] dvet;
 		dvet = temp;
-		temp = {};
+		temp = 0;
 		dvet->sz = newsz;
+		sz = newsz;
+		dvet->times = times;
+
 	}
+	int tst{1}, cont{};
 	cout << "Adicionar\n";
 	cout << "----------\n";
+
 	cout << "Produto :";
 	cin >> pduct.name;
-	if (!isupper(pduct.name[0]))
-		pduct.name[0] = towupper(pduct.name[0]);
-	for (int f{ 1 }; f < sz; f++) {
+	if (islower(pduct.name[0]))
+		pduct.name[0] = towupper((pduct.name[0]));
+	for (int f{1}; f <= strlen(pduct.name); f++) {
 		if (isupper(pduct.name[f]))
-			pduct.name[f] = towlower(pduct.name[f]);
+		pduct.name[f] = towlower((pduct.name[f]));
 	}
-
-	cout << "Preço :";
-	cin >> pduct.price;
-	cout << "Quantidade:";
-	cin >> pduct.stocked;
-	unsigned tst{}, cont{};
-
-	for (int f{}; f < sz; f++) {
-		if (!(strcmp(dvet[f].Prd.name, pduct.name))) {
-			cont = f;
-			tst++;
+	int is{}, control{};
+	while (tst != 0 && is < sz) { //Verificação se o produto então inserido é um mesmo já existente
+		tst = strcmp(pduct.name, dvet[is].Prd.name);
+		if (tst == 0) {
+			control++;
 		}
-		if (cont++ > 0) {
-			dvet[cont].Prd.price = pduct.price;
-			dvet[cont].Prd.stocked += pduct.stocked;
-		}
-		else {
-			strcpy(dvet[sz].Prd.name, pduct.name);
-			dvet->Prd.price = pduct.price;
-			dvet->Prd.stocked = pduct.stocked;
-		}
-
+		is++;
+	}	
+	if (tst == 0) {
+		cout << "Preço :";
+		strcpy(dvet[is].Prd.name, pduct.name);
+		cin >> dvet[is].Prd.price;
+		cout << "Quant: ";
+		cin >> dvet[is].Prd.stocked;
+		dvet->sz = sz;
 	}
-
+	else {
+		strcpy(dvet[ct].Prd.name,pduct.name);
+		cout << "Preco: ";
+		cin >> dvet[ct].Prd.price;
+		cout << "Quant: ";
+		cin >> dvet[ct].Prd.stocked;
+		ct++;
+		dvet->ct = ct;
+	}
+	
+	
+	return dvet;
 }
 
-void Excluir(Dvector* dvet){
+void Excluir(Dvector* dvet, int ct) {
 	int tst{};
 	char vf{};
 	cout << "Excluir\n-------\n";
-	for(int i{}; i < dvet->sz;i++) {
+	for(int i{}; i < dvet->ct;i++) {
 		cout << (i + 1) << ") ";
-		cout << dvet->Prd.name << endl;
+		cout << dvet[i].Prd.name << endl;
 	}
 	cout << "Número do produto: ";
 	cin >> tst;
@@ -152,24 +194,33 @@ void Excluir(Dvector* dvet){
 		for(int i ={tst}; i < dvet->sz;i++){
 			dvet[i - 1] = dvet[i];
 		}
+		dvet[ct--] = {};
 	}
 }
 
 void Listar(Dvector* vet){
-	cout << "Listagem\n---------";
-	for (int i{}; i < vet->sz; i++) {
-		cout << left; cout.width(25); cout.fill(' ');
+	cout << "Listagem\n---------\n";
+	for (int i{0}; i < vet->ct; i++) {
 		cout << vet[i].Prd.name;
 
 		cout << " - " << "R$";
 
 		cout << fixed; cout.precision(2); cout.fill('0');
 		cout << vet[i].Prd.price;
-		cout << left; cout.width(10); cout.fill(' ');
-		cout << " - " << vet[i].Prd.stocked << "KG";
+		cout << " - " << vet[i].Prd.stocked << "KG" <<  endl;
 	}
+	system("pause");
 }
 
 void Sair(Dvector* vet){
+	ofstream fout;
+	fout.open("Data.dat", ios_base::out | ios_base::binary);
+	fout.write((char*)&vet->sz, sizeof(int));
+	fout.write((char*)&vet->times, sizeof(int));
+	fout.write((char*)&vet->ct, sizeof(int));
 
+	for (int i = 0; i < vet->sz; i++) {
+		fout.write((char*)&vet[i].Prd, sizeof(vet[i].Prd));
+	}
+	fout.close();
 }
